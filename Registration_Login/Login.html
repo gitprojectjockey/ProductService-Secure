@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <title>Login</title>
+    <meta charset="utf-8" />
+</head>
+<body style="padding-top:20px">
+    <div class="col-md-10 col-lg-offset-1">
+        <div class="well">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="success">
+                        <td colspan="2">
+                            Existing User Login
+                            <a class="btn btn-success pull-right" href="Register.html">Register</a>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Username
+                        </td>
+                        <td>
+                            <input type="text" id="txtUsername" placeholder="Username" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Password
+                        </td>
+                        <td>
+                            <input type="password" id="txtPassword" placeholder="Password" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="button" id="btnLogin" value="Login" class="btn btn-success" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="validationError" class="alert alert-danger collapse">
+                <a id="linkCollapseValidationError" class="close" href="#">&times;</a>
+                <div id="errorMessage"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+    <script src="jquery.modal.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#linkCollapseValidationError').click(function () {
+                $('#validationError').hide('fade');
+            });
+
+            $('#btnLogin').click(function () {
+               
+                $.ajax({
+                    method: 'POST',
+                    url: 'http://localhost:55749/token',
+                    contentType: 'application/json',
+                    data: {
+                        username: $('#txtUsername').val(),
+                        password: $('#txtPassword').val(),
+                        grant_type: 'password'
+                    },
+
+                    success: function (response) {
+                        // api returns token in response object and we stringify it and save in session.
+                        sessionStorage.setItem('accessToken', response.access_token);
+                    },
+
+                    error: function (jqxhr) {
+                        
+                        // api returns error in jquery xml http request object.
+                        $('#errorMessage').text(jqxhr.responsetext);
+                        $('#validationError').show('fade');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

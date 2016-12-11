@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductService.Controllers
 {
-
+    [Authorize]
     [EnableCors(origins: "http://localhost:50617", headers: "*", methods: "*")]
     [RoutePrefix("async/api/products")]
     public class AsyncProductsController : ApiController

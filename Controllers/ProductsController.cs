@@ -8,6 +8,7 @@ using System.Web.Http.Cors;
 
 namespace ProductService.Controllers
 {
+    [Authorize]
     [EnableCors(origins: "http://localhost:50617", headers: "*", methods: "*")]
     [RoutePrefix("api/products")]
     public class ProductsController : ApiController
