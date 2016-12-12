@@ -47,11 +47,15 @@
             </div>
         </div>
     </div>
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
-    <script src="jquery.modal.js" type="text/javascript" charset="utf-8"></script>
 
+   <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+   <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+    <script src="../Scripts/jquery-1.10.2.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
+
     <script type="text/javascript">
+
         $(document).ready(function () {
 
             $('#linkCollapseValidationError').click(function () {
@@ -73,17 +77,18 @@
                     success: function (response) {
                         // api returns token in response object and we stringify it and save in session.
                         sessionStorage.setItem('accessToken', response.access_token);
+                        window.location.href = '../HtmlViews/DataDisplay.html';
                     },
 
                     error: function (jqxhr) {
-                        
                         // api returns error in jquery xml http request object.
-                        $('#errorMessage').text(jqxhr.responsetext);
+                        $('#errorMessage').text(jqxhr.responseText);
                         $('#validationError').show('fade');
                     }
                 });
             });
         });
+
     </script>
 </body>
 </html>
