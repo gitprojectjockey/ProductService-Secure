@@ -52,7 +52,8 @@
         <div id="errorMessage"></div>
     </div>
 
-    <script src="../Scripts/jquery-1.10.2.min.js"></script>
+
+    <script src="../Scripts/jquery-3.1.1.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
 
     <script type="text/javascript">
@@ -75,7 +76,9 @@
                     },
                     success: function (data) {
                         //debugger;
+                        //Empty takes along time.
                         $('#tblProductsBody').empty();
+                      
                         $('divProducts').removeClass('hidden');
                         $.each(data, function (index,value) {
                             var row = $('<tr><td>'

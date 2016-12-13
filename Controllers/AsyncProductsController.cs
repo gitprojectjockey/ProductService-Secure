@@ -24,7 +24,7 @@ namespace ProductService.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync(System.Threading.CancellationToken cancellationToken)
         {
-            IEnumerable<Product> products = await _unitOfWork.Products.GetAllAsync(cancellationToken);
+            IEnumerable <Product> products = await _unitOfWork.Products.GetAllAsync(cancellationToken);
             return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<Product>>(Request, products, System.Net.HttpStatusCode.OK);
         }
 
@@ -44,6 +44,8 @@ namespace ProductService.Controllers
             }
         }
 
+      
+
         [Route("GetByName/{name}")]
         [HttpGet]
         [MyFilters.CheckForNullParameter]
@@ -60,7 +62,16 @@ namespace ProductService.Controllers
             }
         }
 
-        [Route("GetByName")]
+
+        [Route("GetPaged")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetPagedAsync([FromUri] Models.PagedUriData pagedUriData)
+        {
+            IEnumerable<Product> products = await _unitOfWork.Products.GetPagedProductsAsync(pagedUriData.DisplayLength,pagedUriData.DisplayStart,pagedUriData.SortColumn,pagedUriData.SortDirection,pagedUriData.SearchText);
+            return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<Product>>(Request, products, System.Net.HttpStatusCode.OK);
+        }
+
+    [Route("GetByName")]
         [HttpPost]
         [MyFilters.CheckForNullParameter]
         [MyFilters.ModelStateValidator]
