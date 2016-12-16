@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Threading.Tasks;
+using EDataLayer.Core.Domain.ResultEntities.Concrete;
 
 namespace ProductService.Controllers
 {
@@ -24,7 +25,7 @@ namespace ProductService.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync(System.Threading.CancellationToken cancellationToken)
         {
-            IEnumerable <Product> products = await _unitOfWork.Products.GetAllAsync(cancellationToken);
+            IEnumerable<Product> products = await _unitOfWork.Products.GetAllAsync(cancellationToken);
             return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<Product>>(Request, products, System.Net.HttpStatusCode.OK);
         }
 
@@ -44,7 +45,7 @@ namespace ProductService.Controllers
             }
         }
 
-      
+
 
         [Route("GetByName/{name}")]
         [HttpGet]
@@ -62,16 +63,23 @@ namespace ProductService.Controllers
             }
         }
 
-
         [Route("GetPaged")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetPagedAsync([FromUri] Models.PagedUriData pagedUriData)
+        public async Task<IHttpActionResult> GetPagedAsync([FromUri] Models.PagedUriData uriData)
         {
-            IEnumerable<Product> products = await _unitOfWork.Products.GetPagedProductsAsync(pagedUriData.DisplayLength,pagedUriData.DisplayStart,pagedUriData.SortColumn,pagedUriData.SortDirection,pagedUriData.SearchText);
+            IEnumerable<Product> products = await _unitOfWork.Products.GetPagedProductsAsync(uriData.DisplayLength, uriData.DisplayStart, uriData.SortColumn, uriData.SortDirection, uriData.SearchText);
             return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<Product>>(Request, products, System.Net.HttpStatusCode.OK);
         }
 
-    [Route("GetByName")]
+        [Route("GetPagedByCompany")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetPagedByCompanyAsync([FromUri] Models.PagedByCompanyUriData uriData)
+        {
+            IEnumerable<CompanyWithProductResult> companyWithProductResult = await _unitOfWork.Products.GetPagedProductsByCompanyAsync(uriData.CompanyName, uriData.DisplayLength, uriData.DisplayStart, uriData.SortColumn, uriData.SortDirection, uriData.SearchText);
+            return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<CompanyWithProductResult>>(Request, companyWithProductResult, System.Net.HttpStatusCode.OK);
+        }
+
+        [Route("GetByName")]
         [HttpPost]
         [MyFilters.CheckForNullParameter]
         [MyFilters.ModelStateValidator]
@@ -232,7 +240,7 @@ namespace ProductService.Controllers
             if (productsToDelete.Count() > 0)
             {
                 _unitOfWork.Products.RemoveRange(productsToDelete);
-               await  _unitOfWork.CompleteAsync();
+                await _unitOfWork.CompleteAsync();
                 return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<Product>>(Request, productsToDelete, System.Net.HttpStatusCode.OK);
             }
             else

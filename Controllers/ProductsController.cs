@@ -81,7 +81,6 @@ namespace ProductService.Controllers
         [MyFilters.CheckForNullParameter]
         public IHttpActionResult GetByRange([FromBody]IEnumerable<Guid> ids)
         {
-            // List<Guid> guids = Ids.Where(i => Ids.Contains(i)).Select(i => new Guid(i)).ToList();
             var foundProducts = _unitOfWork.Products.GetProductsByRange(ids);
             if (foundProducts.Count() > 0)
             {

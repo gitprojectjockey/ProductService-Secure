@@ -2,6 +2,7 @@
 <html>
 <head>
     <link href="../Content/bootstrap.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" />
     <title>Products</title>
     <meta charset="utf-8" />
 </head>
@@ -15,8 +16,8 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Id</th>
-                        <th>Name</th>
+                        <th >Id</th>
+                        <th>Product Name</th>
                         <th>Description</th>
                         <th>Price</th>
                     </tr>
@@ -52,9 +53,10 @@
         <div id="errorMessage"></div>
     </div>
 
-
-    <script src="../Scripts/jquery-3.1.1.min.js"></script>
-    <script src="../Scripts/bootstrap.min.js"></script>
+    <script src="../Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="//cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap.min.js" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -68,38 +70,74 @@
             });
 
             $('#btnLoad').click(function () {
+                loadProducts(100, 0);
+            });
+
+            function loadProducts(displayLength, displayStart, companyName) {
+
+                var uri = 'http://localhost:55749/async/api/products/getpaged?DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=2&SortDirection=ASC'
+
                 $.ajax({
                     method: 'GET',
-                    url: 'http://localhost:55749/async/api/products',
+                    url: uri,
                     headers: {
-                        'Authorization' : 'Bearer '  + sessionStorage.getItem('accessToken')
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
                     },
                     success: function (data) {
-                        //debugger;
-                        //Empty takes along time.
-                        $('#tblProductsBody').empty();
                       
-                        $('divProducts').removeClass('hidden');
-                        $.each(data, function (index,value) {
+                        $.each(data, function (index, value) {
+
                             var row = $('<tr><td>'
                                 + (index + 1) + '</td><td>'
                                 + value.ProductId + '</td><td>'
                                 + value.ProductName + '</td><td>'
                                 + value.Description + '</td><td>'
                                 + value.Price + '</td></tr>');
-                           
-                            $(tblProductsBody).append(row);
+
+                            $('#tblProductsBody').append(row);
+                        });
+                       
+
+                        $('#tblProducts').dataTable({
+                            "destroy": true,
+                            "paging": true,
+                            "ordering": true,
+                            "info": true,
+                            "lengthMenu": [10, 25, 50, 75, 100],
+                            //dom: 'Bfrtip',
+                            //buttons: [
+                            //    {
+                            //        text: 'Refresh',
+                            //        action: function (e, dt, node, config) {
+                            //            alert('Button activated');
+                            //        }
+                            //    }],
+
+                            "fnFooterCallback": function (nFoot, aData, iStart, iEnd, aiDisplay) {
+
+                                var table = $('#tblProducts').dataTable();
+                                var rowCount = table.fnGetData().length
+                                var oSettings = table.fnSettings();
+                                var topPage = (rowCount / oSettings._iDisplayLength);
+                                var currentPage = Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength) + 1
+
+                                //if (rowCount > 0 && rowCount == iEnd) {
+                                //    loadAllProducts(x, iEnd);
+                                //}
+                            }
                         });
                     },
-                  
+
                     error: function (jqXHR) {
                         // API returns error in jQuery xml http request object.
                         $('#errorMessage').text(jqXHR.responseText);
                         $('#validationError').show('fade');
                     }
                 });
-            });
+            };
         });
+
     </script>
 </body>
+
 </html>

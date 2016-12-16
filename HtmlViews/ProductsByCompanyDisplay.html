@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="../Content/bootstrap.css" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <title>Products By Company</title>
+    <meta charset="utf-8" />
+</head>
+<body style="padding-top:20px">
+
+    <div class="col-md-10 col-lg-offset-1">
+        <div class="well">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="success">
+                        <td colspan="2">
+                            <span>
+                                <input type="button" id="btnLoadProductsByCompany" value="Load Products By Company" class="btn btn-success" />
+                                <select class="selectpicker" id="selectCompany"></select>
+                            </span>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="modal fade" tabindex="-1" id="tokenExpiryModal" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div>
+                            <button type="button" class="close" data-dismiss="modal">
+                                &times;
+                            </button>
+                            <h4 class="modal-title">Session Expired</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="modal-title">Please close this message to login.</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="validationError" class="alert alert-danger collapse">
+            <a id="linkCollapseValidationError" class="close" href="#">&times;</a>
+            <div id="errorMessage"></div>
+        </div>
+        <div class="well" id="divProducts">
+            <table class="table table-bordered" id="tblProductsByCompany">
+                <thead>
+                    <tr class="success">
+                        <th>Id</th>
+                        <th>Company Name</th>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyProductsByCompany"></tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+    <script src="../Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="//cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../Scripts/productService.js"></script>
+
+
+</body>
+
+</html>

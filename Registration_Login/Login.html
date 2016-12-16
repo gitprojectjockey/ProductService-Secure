@@ -23,7 +23,7 @@
                             Username
                         </td>
                         <td>
-                            <input type="text" id="txtUsername" placeholder="Username" />
+                            <input type="text" id="txtUsername" placeholder="Username" value="ewnordin@comcast.net" />
                         </td>
                     </tr>
                     <tr>
@@ -31,7 +31,7 @@
                             Password
                         </td>
                         <td>
-                            <input type="password" id="txtPassword" placeholder="Password" />
+                            <input type="password" id="txtPassword" placeholder="Password" value="Wr400f!" />
                         </td>
                     </tr>
                     <tr>
@@ -50,7 +50,6 @@
 
    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
-
 
     <script src="../Scripts/jquery-3.1.1.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
@@ -78,7 +77,7 @@
                     success: function (response) {
                         // api returns token in response object and we stringify it and save in session.
                         sessionStorage.setItem('accessToken', response.access_token);
-                        window.location.href = '../HtmlViews/DataDisplay.html';
+                        window.location.href = '../HtmlViews/ProductsByCompanyDisplay.html';
                     },
 
                     error: function (jqxhr) {
