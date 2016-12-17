@@ -46,7 +46,6 @@ namespace ProductService.Controllers
         }
 
 
-
         [Route("GetByName/{name}")]
         [HttpGet]
         [MyFilters.CheckForNullParameter]
@@ -70,7 +69,7 @@ namespace ProductService.Controllers
             IEnumerable<Product> products = await _unitOfWork.Products.GetPagedProductsAsync(uriData.DisplayLength, uriData.DisplayStart, uriData.SortColumn, uriData.SortDirection, uriData.SearchText);
             return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<Product>>(Request, products, System.Net.HttpStatusCode.OK);
         }
-
+       
         [Route("GetPagedByCompany")]
         [HttpGet]
         public async Task<IHttpActionResult> GetPagedByCompanyAsync([FromUri] Models.PagedByCompanyUriData uriData)

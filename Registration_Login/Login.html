@@ -63,10 +63,10 @@
             });
 
             $('#btnLogin').click(function () {
-               
+                debugger;
                 $.ajax({
                     method: 'POST',
-                    url: 'http://localhost:55749/token',
+                    url: 'http://localhost:8081/token',
                     contentType: 'application/json',
                     data: {
                         username: $('#txtUsername').val(),
@@ -81,6 +81,7 @@
                     },
 
                     error: function (jqxhr) {
+                        debugger;
                         // api returns error in jquery xml http request object.
                         $('#errorMessage').text(jqxhr.responseText);
                         $('#validationError').show('fade');

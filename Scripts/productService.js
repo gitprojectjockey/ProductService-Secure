@@ -19,7 +19,7 @@
     // ---------------------------------------------------------------------------------------------------
 
     function loadCompanyNames() {
-        var uri = 'http://localhost:55749/async/api/companies'
+        var uri = 'http://localhost:8081/async/api/companies'
         $.ajax({
             method: 'GET',
             url: uri,
@@ -35,6 +35,7 @@
             },
             error: function (jqXHR) {
                 // API returns error in jQuery xml http request object.
+               
                 $('#errorMessage').text(jqXHR.responseText);
                 $('#validationError').show('fade');
             }
@@ -54,6 +55,7 @@
                 { 'data': 'ProductName' },
                 { 'data': 'Description' },
                 { 'data': 'Price' }],
+            "aaSorting": [],
             "fnFooterCallback": function (nFoot, aData, iStart, iEnd, aiDisplay) {
             }
         });
@@ -61,18 +63,20 @@
 
     function retrieveJson(displayLength, displayStart, companyName) {
 
-        var uri = 'http://localhost:55749/async/api/products/getpagedByCompany?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=2&SortDirection=ASC'
-
+        var uri = 'http://localhost:8081/async/api/products/getpagedByCompany?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=3&SortDirection=asc'
+       
         $.ajax({
             method: 'GET',
             url: uri,
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
             },
+
             success: function (data) {
                 loadProductsByCompanyTable(data);
             },
             error: function (jqXHR) {
+                debugger;
                 // API returns error in jQuery xml http request object.
                 $('#errorMessage').text(jqXHR.responseText);
                 $('#validationError').show('fade');
@@ -81,8 +85,6 @@
     };
 
     function loadProductsByCompanyTable(json) {
-
-        debugger;
         table = $('#tblProductsByCompany').dataTable();
         oSettings = table.fnSettings();
 
