@@ -4,6 +4,11 @@
         window.location.href = '../Registration_Login/login.html';
     }
 
+    $('#tokenExpiryModal').on('hidden.bs.modal', function () {
+        window.location.href = '../Registration_Login/login.html';
+    })
+
+
     $('#linkCollapseValidationError').click(function () {
         $('#validationError').hide('fade');
     });
@@ -11,18 +16,19 @@
     $('#btnLoadProductsByCompany').click(function () {
         retrieveJson(100, 0, $('#selectCompany option:selected').text());
     });
-  
+
     initProductsByCompanyTable();
-   
+
     loadCompanyNames();
 
     // ---------------------------------------------------------------------------------------------------
 
     function loadCompanyNames() {
-        var uri = 'http://localhost:8081/async/api/companies'
+        var uri = 'http://localhost:55749/async/api/companies'
         $.ajax({
             method: 'GET',
             url: uri,
+            contentType: 'application/json',
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
             },
@@ -35,7 +41,7 @@
             },
             error: function (jqXHR) {
                 // API returns error in jQuery xml http request object.
-               
+
                 $('#errorMessage').text(jqXHR.responseText);
                 $('#validationError').show('fade');
             }
@@ -55,19 +61,26 @@
                 { 'data': 'ProductName' },
                 { 'data': 'Description' },
                 { 'data': 'Price' }],
+            "bAutoWidth": false,
+            "columnDefs": [
+                { 'type': 'numeric-comma', 'targets': 4 }],
             "aaSorting": [],
             "fnFooterCallback": function (nFoot, aData, iStart, iEnd, aiDisplay) {
+            },
+            "createdRow": function (row, data, index) {
+                $('td', row).eq(4).addClass('enMoney');
             }
         });
     };
 
     function retrieveJson(displayLength, displayStart, companyName) {
 
-        var uri = 'http://localhost:8081/async/api/products/getpagedByCompany?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=3&SortDirection=asc'
-       
+        var uri = 'http://localhost:55749/async/api/products/getpagedByCompany?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=2&SortDirection=asc'
+
         $.ajax({
             method: 'GET',
             url: uri,
+            contentType: 'application/json',
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
             },
@@ -76,20 +89,28 @@
                 loadProductsByCompanyTable(data);
             },
             error: function (jqXHR) {
-                debugger;
                 // API returns error in jQuery xml http request object.
-                $('#errorMessage').text(jqXHR.responseText);
-                $('#validationError').show('fade');
+                if (jqXHR.status == '401') {
+                    $('#tokenExpiryModal').modal('show');
+                }
+                else {
+                    $('#errorMessage').text(jqXHR.responseText);
+                    $('#validationError').show('fade');
+                }
             }
         });
     };
 
     function loadProductsByCompanyTable(json) {
+
         table = $('#tblProductsByCompany').dataTable();
         oSettings = table.fnSettings();
-
         table.fnClearTable(this);
-
+        //add thousands seperator to Price
+        for (var i = 0; i < json.length; i++) {
+            json[i].Price = Number(json[i].Price).toLocaleString('en');
+        }
+       
         for (var i = 0; i < json.length; i++) {
             table.oApi._fnAddData(oSettings, json[i]);
         }

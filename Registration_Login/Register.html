@@ -50,7 +50,7 @@
                 </tbody>
             </table>
             <div class="modal fade" tabindex="-1" id="successModal" data-keyboard="false" data-backdrop="static">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <div>
@@ -94,7 +94,7 @@
 
                 $.ajax({
                     method: 'POST',
-                    url: 'http://localhost:8081/api/account/register',
+                    url: 'http://localhost:55749/api/account/register',
                     data: {
                         email: $('#txtEmail').val(),
                         password: $('#txtPassword').val(),

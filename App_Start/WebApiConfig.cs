@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Owin.Security.OAuth;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Routing;
@@ -20,11 +21,13 @@ namespace ProductService
             //from a cross domain client.
 
             //This enables CORS for all controllers and actions (GLOBAL) you can also do this at the controller of action level
-            // var cors = new EnableCorsAttribute("http://localhost:50617", "*", "get,post,put,delete");
-            var cors = new EnableCorsAttribute("http://localhost:50617", "*", "*");
+            var cors = new EnableCorsAttribute("*", "*", "get,post,put,delete");
+            //var cors = new EnableCorsAttribute("http://localhost:50617", "*", "*");
             config.EnableCors();
 
-           
+            //This is required if you want your tokens to expire properly with OAuth Bearer Tokens
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
             //This Service uses attribute routing only so we need to call config.MapHttpAttributeRoutes() to enable it.      
             config.MapHttpAttributeRoutes();
