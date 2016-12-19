@@ -149,7 +149,7 @@ namespace ProductService.Controllers
                 productToUpdate.Description = product.Description;
                 productToUpdate.Price = product.Price;
                 productToUpdate.CompanyId = product.CompanyId;
-                productToUpdate.ProductCatagoryId = product.ProductCatagoryId;
+                productToUpdate.ProductCategoryId = product.ProductCategoryId;
 
                 _unitOfWork.Products.Update(productToUpdate);
                 _unitOfWork.Complete();
@@ -179,7 +179,7 @@ namespace ProductService.Controllers
                     productToUpdate.Description = products.Single(p => p.ProductId == productToUpdate.ProductId).Description;
                     productToUpdate.Price = products.Single(p => p.ProductId == productToUpdate.ProductId).Price;
                     productToUpdate.CompanyId = products.Single(p => p.ProductId == productToUpdate.ProductId).CompanyId;
-                    productToUpdate.ProductCatagoryId = products.Single(p => p.ProductId == productToUpdate.ProductId).ProductCatagoryId;
+                    productToUpdate.ProductCategoryId = products.Single(p => p.ProductId == productToUpdate.ProductId).ProductCategoryId;
                     _unitOfWork.Products.Update(productToUpdate);
                 }
 
