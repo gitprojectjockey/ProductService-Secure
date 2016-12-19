@@ -15,6 +15,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/*My Styles*/
+table.dataTable tbody tr.selected {
+    background-color: #399032;
+    color:white;
+}
+
 .enMoney::before {
     content:"$";
 }

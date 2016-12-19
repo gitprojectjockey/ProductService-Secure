@@ -1,5 +1,10 @@
 ﻿$(document).ready()
 {
+    //Remove conflix bootstrap jquery dialog x on close button
+    $.fn.bootstrapBtn = $.fn.button.noConflict();
+
+    $('#divEditDialog').hide();
+
     if (sessionStorage.getItem('accessToken') === null) {
         window.location.href = '../Registration_Login/login.html';
     }
@@ -8,13 +13,91 @@
         window.location.href = '../Registration_Login/login.html';
     })
 
-
     $('#linkCollapseValidationError').click(function () {
         $('#validationError').hide('fade');
     });
 
     $('#btnLoadProductsByCompany').click(function () {
-        retrieveJson(100, 0, $('#selectCompany option:selected').text());
+        retrieveJsonProducts(100, 0, $('#selectCompany option:selected').text());
+    });
+
+    $('#tblProductsByCompany tbody').on('click', 'tr', function () {
+
+        //grap all the column values for the selected row
+        var tds = $(this).find('td');
+        if (tds.length != 0) {
+            var id = tds.eq(0).text();
+            var companyName = tds.eq(1).selected;
+            var selectedCompanyIndex = $("#selectCompany")[0].selectedIndex;
+            var productName = tds.eq(2).text();
+            var description = tds.eq(3).text();
+            var price = tds.eq(4).text();
+        }
+
+        //highlight the selected row and only the selected row
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+
+        //remove any edit row buttons that have already been added
+        table.$('tr').each(function () {
+            $(this).find('td:nth-child(1)').children(1).remove();
+        });
+
+        //add a new editrow button on clicked row 
+        $(this).find('td:nth-child(1)').prepend('<input type="button" id="btnEditRow" value="Edit" class="btn btn-success" />' + ' ');
+
+        //add anonymous function for editrow button click to load and show the dialog table
+        $(this).find('td:nth-child(1)').children(1).on('click', function () {
+
+            //find company name td based on class and remove selectCompany dropdown if it exists
+            if ($('#tblEditDialog .companyName').children().length > 0) {
+                $('#tblEditDialog .companyName').children().remove();
+            }
+            //make a deep copy of the selectCompany dropdown from above and inject into tblEditDialog td companyName
+            $('.selectpicker').clone().appendTo($('#tblEditDialog .companyName'))
+
+            $('#txtId').val(id);
+            $('#tblEditDialog .companyName').children(0)[0].selectedIndex = selectedCompanyIndex;
+            $('#txtProductName').val(productName);
+            $('#txtDescription').val(description);
+            $('#txtPrice').val(price);
+
+
+            //Show the dialog for editing row column values
+            $('#divEditDialog').show('fade');
+            $('#divEditDialog').dialog({
+                title: 'Edit Row',
+                resizable: false,
+                height: "auto",
+                width: 500,
+                modal: true,
+                buttons: {
+                    "Save": function () {
+                        $(this).dialog("close");
+                        //for some reason the opening of dialog removes row hightlight select class
+                        //when dialog dismiss find row that has edit button on it an re-add the select class
+                        table.$('tr').each(function () {
+                            if ($(this).find('td:nth-child(1)').children(1).length > 0)
+                                $(this).addClass('selected');
+                        });
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                        //for some reason the opening of dialog removes row hightlight select class
+                        //when dialog dismiss find row that has edit button on it an re-add the select class
+                        table.$('tr').each(function () {
+                            if ($(this).find('td:nth-child(1)').children(1).length > 0)
+                                $(this).addClass('selected');
+                        });
+                    },
+                }
+            });
+        });
     });
 
     initProductsByCompanyTable();
@@ -22,6 +105,8 @@
     loadCompanyNames();
 
     // ---------------------------------------------------------------------------------------------------
+
+
 
     function loadCompanyNames() {
         var uri = 'http://localhost:55749/async/api/companies'
@@ -34,7 +119,7 @@
             },
             success: function (data) {
                 $.each(data, function (index, value) {
-                    var row = $('<option>' + value.CompanyName + '</option>');
+                    var row = $('<option value=' + value.CompanyId + '>' + value.CompanyName + '</option>');
                     $('#selectCompany').append(row);
                 });
                 $("#selectCompany")[0].selectedIndex = 0
@@ -73,7 +158,7 @@
         });
     };
 
-    function retrieveJson(displayLength, displayStart, companyName) {
+    function retrieveJsonProducts(displayLength, displayStart, companyName) {
 
         var uri = 'http://localhost:55749/async/api/products/getpagedByCompany?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=2&SortDirection=asc'
 
@@ -110,7 +195,7 @@
         for (var i = 0; i < json.length; i++) {
             json[i].Price = Number(json[i].Price).toLocaleString('en');
         }
-       
+
         for (var i = 0; i < json.length; i++) {
             table.oApi._fnAddData(oSettings, json[i]);
         }
