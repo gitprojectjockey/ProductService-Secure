@@ -21,18 +21,13 @@
         retrieveJsonProducts(100, 0, $('#selectCompany option:selected').text());
     });
 
-    $('#tblProductsByCompany tbody').on('click', 'tr', function () {
+    $('#tblProductsByCompany tbody').on('click', 'tr', function (args) {
 
-        //grap all the column values for the selected row
-        var tds = $(this).find('td');
-        if (tds.length != 0) {
-            var id = tds.eq(0).text();
-            var companyName = tds.eq(1).selected;
-            var selectedCompanyIndex = $("#selectCompany")[0].selectedIndex;
-            var productName = tds.eq(2).text();
-            var description = tds.eq(3).text();
-            var price = tds.eq(4).text();
-        }
+        //grab the clicked row index
+        var rowIndex = $(this).closest('tr').prevAll().length;
+
+        //using row index get a colomn array from data table
+        var columns = new $.fn.dataTable.Api('#tblProductsByCompany').rows(rowIndex).data();
 
         //highlight the selected row and only the selected row
         if ($(this).hasClass('selected')) {
@@ -61,12 +56,15 @@
             //make a deep copy of the selectCompany dropdown from above and inject into tblEditDialog td companyName
             $('.selectpicker').clone().appendTo($('#tblEditDialog .companyName'))
 
-            $('#txtId').val(id);
-            $('#tblEditDialog .companyName').children(0)[0].selectedIndex = selectedCompanyIndex;
-            $('#txtProductName').val(productName);
-            $('#txtDescription').val(description);
-            $('#txtPrice').val(price);
+            $('#txtId').val(columns[0].ProductId);
+            $('#tblEditDialog .companyName').children(0)[0].selectedIndex = $("#selectCompany")[0].selectedIndex;
 
+            //set the selected option using the productCategoryId from datatabel row.
+            $('#selectCategory').val(columns[0].ProductCategoryId).attr('selected', 'selected');
+
+            $('#txtProductName').val(columns[0].ProductName);
+            $('#txtDescription').val(columns[0].Description);
+            $('#txtPrice').val(columns[0].Price);
 
             //Show the dialog for editing row column values
             $('#divEditDialog').show('fade');
@@ -85,6 +83,7 @@
                             if ($(this).find('td:nth-child(1)').children(1).length > 0)
                                 $(this).addClass('selected');
                         });
+                        saveProduct();
                     },
                     Cancel: function () {
                         $(this).dialog("close");
@@ -104,12 +103,12 @@
 
     loadCompanyNames();
 
+    loadProductCategoryNames();
+
     // ---------------------------------------------------------------------------------------------------
 
-
-
     function loadCompanyNames() {
-        var uri = 'http://localhost:55749/async/api/companies'
+        var uri = 'http://localhost:55749/async/api/companies';
         $.ajax({
             method: 'GET',
             url: uri,
@@ -133,6 +132,30 @@
         });
     };
 
+    function loadProductCategoryNames() {
+        var uri = 'http://localhost:55749/async/api/productCategories'
+        $.ajax({
+            method: 'GET',
+            url: uri,
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
+            },
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    var row = $('<option value=' + value.ProductCategoryId + '>' + value.CategoryName + '</option>');
+                    $('#selectCategory').append(row);
+                });
+            },
+            error: function (jqXHR) {
+                // API returns error in jQuery xml http request object.
+
+                $('#errorMessage').text(jqXHR.responseText);
+                $('#validationError').show('fade');
+            }
+        });
+    };
+
     function initProductsByCompanyTable() {
         $('#tblProductsByCompany').dataTable({
             "destroy": true,
@@ -145,10 +168,19 @@
                 { 'data': 'CompanyName' },
                 { 'data': 'ProductName' },
                 { 'data': 'Description' },
-                { 'data': 'Price' }],
+                { 'data': 'Price' },
+                { 'data': 'CategoryName' },
+                { 'data': 'CompanyId' },
+                { 'data': 'ProductCategoryId' }
+            ],
+
             "bAutoWidth": false,
             "columnDefs": [
-                { 'type': 'numeric-comma', 'targets': 4 }],
+                { 'type': 'numeric-comma', 'targets': 4 },
+                { 'visible': false, 'targets': 6 },
+                { 'visible': false, 'targets': 7 }
+            ],
+
             "aaSorting": [],
             "fnFooterCallback": function (nFoot, aData, iStart, iEnd, aiDisplay) {
             },
@@ -202,5 +234,40 @@
 
         oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
         table.fnDraw();
+    }
+
+    function saveProduct() {
+
+        var productToSave = {};
+        productToSave.ProductId = $('#txtId').val();
+        productToSave.ProductName = $('#txtProductName').val();
+        productToSave.Description = $('#txtDescription').val();
+        //remove thousands seperator that was added via css for display
+        productToSave.Price = parseFloat($('#txtPrice').val().replace(/,/g, ''));
+        productToSave.CompanyId = $('#selectCompany').find(':selected').val();
+        productToSave.ProductCategoryId = $('#selectCategory').find(':selected').val();
+
+        var serializeProduct = JSON.stringify(productToSave);
+
+        var uri = 'http://localhost:55749/async/api/products';
+        $.ajax({
+            url: uri,
+            method: 'PUT',
+            contentType: 'application/json; charset=utf-8',
+            //serialize productToSave
+            data: serializeProduct,
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
+            },
+            success: function (data) {
+                //cannot use id selector because this selector object was cloned so both original and clone have same Id. 
+                var currentCompany = $('.selectpicker').find(':selected').val()
+                retrieveJsonProducts(100, 1, currentCompany)
+            },
+            error: function (jqXHR) {
+                $('#errorMessage').text(jqXHR.responseText);
+                $('#validationError').show('fade');
+            }
+        });
     }
 };

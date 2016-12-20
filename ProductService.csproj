@@ -268,6 +268,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AsyncCompanyController.cs" />
+    <Compile Include="Controllers\AsyncProductCategoryController.cs" />
     <Compile Include="Controllers\AsyncProductsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -373,7 +374,6 @@
     <None Include="Properties\PublishProfiles\ProductServiceSecure_PublishProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="HtmlViews\ProductsByCompanyDisplay.html" />
-    <Content Include="HtmlViews\ProductsDisplay.html" />
     <Content Include="Registration_Login\Login.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -428,6 +428,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Views\AsyncProductCategory\" />
     <Folder Include="Views\Company\" />
   </ItemGroup>
   <PropertyGroup>
