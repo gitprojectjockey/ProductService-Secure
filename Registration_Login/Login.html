@@ -2,6 +2,8 @@
 <html>
 <head>
     <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../Content/Site.css" rel="stylesheet" />
     <title>Login</title>
     <meta charset="utf-8" />
 </head>
@@ -11,8 +13,10 @@
             <table class="table table-bordered">
                 <thead>
                     <tr class="success">
+                        <td>
+                            <h4>Existing User Login</h4>
+                        </td>
                         <td colspan="2">
-                            Existing User Login
                             <a class="btn btn-success pull-right" href="Register.html">Register</a>
                         </td>
                     </tr>
@@ -39,6 +43,14 @@
                             <input type="button" id="btnLogin" value="Login" class="btn btn-success" />
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a href="https://www.google.com" target="_blank">
+                              <h3 class="fa fa-google-plus btn btn-success"> Social Login</h3>
+                            </a>
+                        </td>
+                    </tr>
+                   
                 </tbody>
             </table>
             <div id="validationError" class="alert alert-danger collapse">
@@ -47,7 +59,7 @@
             </div>
         </div>
     </div>
-
+   
    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
    <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
@@ -62,6 +74,7 @@
                 $('#validationError').hide('fade');
             });
 
+            // pass offered credenials for login attempt 
             $('#btnLogin').click(function () {
                 $.ajax({
                     method: 'POST',
@@ -74,8 +87,9 @@
                     },
 
                     success: function (response) {
-                        // api returns token in response object and we stringify it and save in session.
+                        // api returns token and username in response object and we save in session.
                         sessionStorage.setItem('accessToken', response.access_token);
+                        sessionStorage.setItem('identity', response.userName);
                         window.location.href = '../HtmlViews/ProductsByCompanyDisplay.html';
                     },
 

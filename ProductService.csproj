@@ -299,6 +299,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="css\font-awesome.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -342,6 +343,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
     <Content Include="FiddlerTokenGrant.txt" />
+    <Content Include="fonts\fontawesome-webfont-v=4.3.0.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -371,6 +373,11 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="fonts\fontawesome-webfont-.eot" />
+    <Content Include="fonts\fontawesome-webfont-v=4.3.0.eot" />
+    <Content Include="fonts\fontawesome-webfont-v=4.3.0.ttf" />
+    <Content Include="fonts\fontawesome-webfont-v=4.3.0.woff" />
+    <Content Include="fonts\fontawesome-webfont-v=4.3.0.woff2" />
     <None Include="Properties\PublishProfiles\ProductServiceSecure_PublishProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="HtmlViews\ProductsByCompanyDisplay.html" />

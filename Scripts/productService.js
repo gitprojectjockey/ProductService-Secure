@@ -1,4 +1,8 @@
-﻿$(document).ready()
+﻿/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
+/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
+/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
+/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
+$(document).ready()
 {
     //Remove conflix bootstrap jquery dialog x on close button
     $.fn.bootstrapBtn = $.fn.button.noConflict();
@@ -19,6 +23,13 @@
 
     $('#btnLoadProductsByCompany').click(function () {
         retrieveJsonProducts(100, 0, $('#selectCompany option:selected').text());
+    });
+
+    $('#btnLogout').click(function () {
+        // logout
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('identity')
+        window.location.href = '../Registration_Login/Login.html'
     });
 
     $('#tblProductsByCompany tbody').on('click', 'tr', function (args) {
@@ -99,6 +110,8 @@
         });
     });
 
+    initLogin();
+
     initProductsByCompanyTable();
 
     loadCompanyNames();
@@ -131,6 +144,15 @@
             }
         });
     };
+
+    function initLogin() {
+        // if not logged in redirect to login
+        if (sessionStorage.getItem('accessToken') == null)
+            window.location.href = '../Registration_Login/Login.html';
+        else
+            // show user identity
+            $('#spanIdentity').text('Welcome ' + sessionStorage.getItem('identity'));
+    }
 
     function loadProductCategoryNames() {
         var uri = 'http://localhost:55749/async/api/productCategories'
