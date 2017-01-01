@@ -4,11 +4,12 @@
     <link href="../Content/bootstrap.min.css" rel="stylesheet" />
     <link href="../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../Content/Site.css" rel="stylesheet" />
+
     <title>Login</title>
     <meta charset="utf-8" />
 </head>
 <body style="padding-top:20px">
-    <div class="col-md-10 col-lg-offset-1">
+    <div class="col-md-6 col-md-offset-3">
         <div class="well">
             <table class="table table-bordered">
                 <thead>
@@ -45,12 +46,12 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <a href="https://www.google.com" target="_blank">
-                              <h3 class="fa fa-google-plus btn btn-success"> Social Login</h3>
+                            <a id="btnGoogleLogin" href="#" target="_blank">
+                                <h4 class="fa fa-google-plus my-btn"> Social Login</h4>
                             </a>
+                            <h5>Login using your google account credentials.</h5>
                         </td>
                     </tr>
-                   
                 </tbody>
             </table>
             <div id="validationError" class="alert alert-danger collapse">
@@ -59,50 +60,11 @@
             </div>
         </div>
     </div>
-   
-   <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
-   <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
     <script src="../Scripts/jquery-3.1.1.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $('#linkCollapseValidationError').click(function () {
-                $('#validationError').hide('fade');
-            });
-
-            // pass offered credenials for login attempt 
-            $('#btnLogin').click(function () {
-                $.ajax({
-                    method: 'POST',
-                    url: 'http://localhost:55749/token',
-                    contentType: 'application/json',
-                    data: {
-                        username: $('#txtUsername').val(),
-                        password: $('#txtPassword').val(),
-                        grant_type: 'password'
-                    },
-
-                    success: function (response) {
-                        // api returns token and username in response object and we save in session.
-                        sessionStorage.setItem('accessToken', response.access_token);
-                        sessionStorage.setItem('identity', response.userName);
-                        window.location.href = '../HtmlViews/ProductsByCompanyDisplay.html';
-                    },
-
-                    error: function (jqxhr) {
-                        // api returns error in jquery xml http request object.
-                        $('#errorMessage').text(jqxhr.responseText);
-                        $('#validationError').show('fade');
-                    }
-                });
-            });
-        });
-
-    </script>
+    <script src="../Scripts/productServiceExecuteMode.js"></script>
+    <script src="../Scripts/productAuthService.js"></script>
 </body>
 </html>
 

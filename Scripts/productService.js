@@ -1,17 +1,16 @@
-﻿/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
-/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
-/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
-/// <reference path="C:\GitProjectJockey\Repo\EWebAPI\ProductServiceSecure\ProductService-Secure\Registration_Login/Login.html" />
+﻿
 $(document).ready()
 {
     //Remove conflix bootstrap jquery dialog x on close button
     $.fn.bootstrapBtn = $.fn.button.noConflict();
 
-    $('#divEditDialog').hide();
-
     if (sessionStorage.getItem('accessToken') === null) {
         window.location.href = '../Registration_Login/login.html';
     }
+
+    //Events
+    //-------------------------------------------------------------------------------------
+    $('#divEditDialog').hide();
 
     $('#tokenExpiryModal').on('hidden.bs.modal', function () {
         window.location.href = '../Registration_Login/login.html';
@@ -110,6 +109,9 @@ $(document).ready()
         });
     });
 
+
+    //function calls
+    //------------------------------------------------------------------------------------
     initLogin();
 
     initProductsByCompanyTable();
@@ -118,10 +120,36 @@ $(document).ready()
 
     loadProductCategoryNames();
 
+    //classes
     // ---------------------------------------------------------------------------------------------------
+    //Class for holing and getting web api service end points
+    function serviceEndPoints(isProduction) {
 
+        var baseDev = 'http://localhost:55749/';
+        var baseProd = 'http://localhost:8081/';
+        var product = 'async/api/products';
+        var company = 'async/api/companies';
+        var productCategory = 'async/api/productCategories';
+        var productByCompany = 'async/api/products/getPagedByCompany';
+        var base = isProduction == true ? baseProd : baseDev;
+
+        this.productUrl = function () {
+            return base + product;
+        }
+        this.companyUrl = function () {
+            return base + company;
+        }
+        this.productCategory = function () {
+            return base + productCategory;
+        }
+        this.productByCompanyUrl = function () {
+            return base + productByCompany;
+        }
+    };
+    //functions
+    //---------------------------------------------------------------------------------------
     function loadCompanyNames() {
-        var uri = 'http://localhost:55749/async/api/companies';
+        var uri = new serviceEndPoints(window.IsProductionMode).companyUrl();
         $.ajax({
             method: 'GET',
             url: uri,
@@ -155,7 +183,7 @@ $(document).ready()
     }
 
     function loadProductCategoryNames() {
-        var uri = 'http://localhost:55749/async/api/productCategories'
+        var uri = new serviceEndPoints(window.IsProductionMode).productCategory();
         $.ajax({
             method: 'GET',
             url: uri,
@@ -214,7 +242,7 @@ $(document).ready()
 
     function retrieveJsonProducts(displayLength, displayStart, companyName) {
 
-        var uri = 'http://localhost:55749/async/api/products/getpagedByCompany?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=2&SortDirection=asc'
+        var uri = new serviceEndPoints(window.IsProductionMode).productByCompanyUrl() + '?CompanyName=' + companyName + '&DisplayLength=' + displayLength + '&DisplayStart=' + displayStart + '&SortColumn=2&SortDirection=asc'
 
         $.ajax({
             method: 'GET',
@@ -271,7 +299,7 @@ $(document).ready()
 
         var serializeProduct = JSON.stringify(productToSave);
 
-        var uri = 'http://localhost:55749/async/api/products';
+        var uri = new serviceEndPoints(window.IsProductionMode).productUrl();;
         $.ajax({
             url: uri,
             method: 'PUT',

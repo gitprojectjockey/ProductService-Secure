@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
 </head>
 <body style="padding-top:20px">
-    <div class="col-md-10 col-lg-offset-1">
+    <div class="col-md-6 col-md-offset-3">
         <div class="well">
             <table class="table table-bordered">
                 <thead>
@@ -65,7 +65,7 @@
                                 <h4 class="modal-title">Registration Successful</h4>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">
+                                <button type="button" id="btnCloseDialog" class="btn btn-success" data-dismiss="modal">
                                     Close
                                 </button>
                             </div>
@@ -80,40 +80,10 @@
         </div>
     </div>
 
-
     <script src="../Scripts/jquery-3.1.1.min.js"></script>
     <script src="jquery.modal.js" type="text/javascript" charset="utf-8"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $('#linkCollapseValidationError').click(function () {
-                $('#validationError').hide('fade');
-            });
-
-            $('#btnRegister').click(function () {
-
-                $.ajax({
-                    method: 'POST',
-                    url: 'http://localhost:55749/api/account/register',
-                    data: {
-                        email: $('#txtEmail').val(),
-                        password: $('#txtPassword').val(),
-                        confirmPassword: $('#txtConfirmPassword').val()
-                    },
-                    success: function () {
-                        $('#successModal').modal('show');
-                    },
-                    error: function (jqXHR) {
-                        // API returns error in jQuery xml http request object.
-                        //debugger;
-                        $('#errorMessage').text(jqXHR.responseText);
-                        $('#validationError').show('fade');
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="../Scripts/productServiceExecuteMode.js"></script>
+    <script src="../Scripts/productRegisterService.js"></script>
 </body>
 </html>
