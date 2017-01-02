@@ -47,8 +47,13 @@ namespace ProductService
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "962877420729-eau0ke54pafsk8qqinqhs46nnaigqai2.apps.googleusercontent.com",
-                ClientSecret = "TjCIb9FnsRhCYWkzuH67eTM7"
+                //PRODUCTION localhost:8081
+                //ClientId = "962877420729-eau0ke54pafsk8qqinqhs46nnaigqai2.apps.googleusercontent.com",
+                //ClientSecret = "TjCIb9FnsRhCYWkzuH67eTM7"
+
+                //DEVELOPEMENT
+                ClientId = "840333866669-0nk64oeu2bra89dpabrk3jrsludlnjsf.apps.googleusercontent.com",
+                ClientSecret = "AH44xKwp4FdnZCgf5vJNJnsf"
             });
         }
     }

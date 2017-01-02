@@ -1,4 +1,4 @@
-﻿
+﻿//Remove jquery-ui-1.12.1.js and jquery-ui-1.12.1.js from _references.js and intellisence works again.
 $(document).ready()
 {
     //classes
@@ -9,7 +9,7 @@ $(document).ready()
         var baseProd = 'http://localhost:8081/';
         var token = 'token';
         var base = isProduction == true ? baseProd : baseDev;
-
+        
         this.loginUrl = function () {
             return base + token;
         }
@@ -47,7 +47,5 @@ $(document).ready()
         });
     });
 
-    $('#btnGoogleLogin').click(function () {
-        window.location.href = '/api/Account/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2F&state=S7xwr01yIjoEegE0hsi6sj9k5DIpkJcRHbhrE91TSNI1';
-    });
+  
 }

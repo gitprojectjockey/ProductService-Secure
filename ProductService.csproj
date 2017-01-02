@@ -400,6 +400,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\productAuthService.js" />
+    <Content Include="Scripts\productGoogleAuthService.js" />
     <Content Include="Scripts\productRegisterService.js" />
     <Content Include="Scripts\productService.js" />
     <Content Include="Scripts\productServiceExecuteMode.js" />

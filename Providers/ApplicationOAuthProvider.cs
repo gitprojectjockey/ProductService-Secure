@@ -75,7 +75,7 @@ namespace ProductService.Providers
         {
             if (context.ClientId == _publicClientId)
             {
-                Uri expectedRootUri = new Uri(context.Request.Uri, "/");
+                Uri expectedRootUri = new Uri(context.Request.Uri, "/Registration_Login/login.html");
 
                 if (expectedRootUri.AbsoluteUri == context.RedirectUri)
                 {
