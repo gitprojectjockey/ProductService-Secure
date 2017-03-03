@@ -55,6 +55,27 @@ namespace ProductService
                 ClientId = "840333866669-0nk64oeu2bra89dpabrk3jrsludlnjsf.apps.googleusercontent.com",
                 ClientSecret = "AH44xKwp4FdnZCgf5vJNJnsf"
             });
+
+
+            var facebookOptions = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions()
+            {
+
+                //Production
+                //AppId = "1235806606540142",
+                //AppSecret = "0e519bffc62d179814ce18bbbbbc65b3",
+
+                //Development
+                AppId = "263747314063867",
+                AppSecret = "58c66e84611d678f43a042e6bfe04d5e",
+
+
+
+                //I had to write this handler to deal with facebook redirect parameters in v2.4
+                BackchannelHttpHandler = new Facebook.FacebookBackChannelHandler(),
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email"
+            };
+            facebookOptions.Scope.Add("email");
+            app.UseFacebookAuthentication(facebookOptions);
         }
     }
 }

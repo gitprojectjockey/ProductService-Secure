@@ -1,4 +1,7 @@
-﻿//Remove jquery-ui-1.12.1.js and jquery-ui-1.12.1.js from _references.js and intellisence works again.
+﻿/// <reference path="productFacebookAuthService.js" />
+/// <reference path="productFacebookAuthService.js" />
+/// <reference path="productFacebookAuthService.js" />
+//Remove jquery-ui-1.12.1.js and jquery-ui-1.12.1.js from _references.js and intellisence works again.
 
 $(document).ready
 {
@@ -28,14 +31,13 @@ $(document).ready
         }
     };
 
-    var googleAuthServiceEndPoints = function (isProduction) {
-        var productionGoogleSignin = 'api/Account/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2FRegistration_Login%2Flogin.html&state=S7xwr01yIjoEegE0hsi6sj9k5DIpkJcRHbhrE91TSNI1';
-        var developmentGoogleSignin = 'api/Account/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=http%3A%2F%2Flocalhost%3A55749%2FRegistration_Login%2Flogin.html&state=FXljII7DPwuTGoq_0m7EEXUdIr_dU8nlr5yF3dsUB3w1';
-        var googleSignin = isProduction == true ? productionGoogleSignin : developmentGoogleSignin;
-
-        this.googleSigninUrl = function () {
+    var facebookAuthServiceEndPoints = function (isProduction) {
+        var productionFacebookSignin = 'api/Account/ExternalLogin?provider=Facebook&response_type=token&client_id=self&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2FRegistration_Login%2Flogin.html&state=S7xwr01yIjoEegE0hsi6sj9k5DIpkJcRHbhrE91TSNI1';
+        var developmentFacebookSignin = 'api/Account/ExternalLogin?provider=Facebook&response_type=token&client_id=self&redirect_uri=http%3A%2F%2Flocalhost%3A55749%2FRegistration_Login%2Flogin.html&state=FXljII7DPwuTGoq_0m7EEXUdIr_dU8nlr5yF3dsUB3w1';
+        var facebookSignin = isProduction == true ? productionFacebookSignin : developmentFacebookSignin;
+        this.facebookSigninUrl = function () {
             //using inherited base function
-            return this.getBaseAddress(isProduction) + googleSignin;
+            return this.getBaseAddress(isProduction) + facebookSignin;
         }
     }
 
@@ -48,76 +50,75 @@ $(document).ready
     //Both of these classes will now inherit from baseServiceEndPoint
     //and can use base class getBaseAddress
     inheritsFrom(productServiceEndPoints, baseServiceEndPoints);
-    inheritsFrom(googleAuthServiceEndPoints, baseServiceEndPoints);
+    inheritsFrom(facebookAuthServiceEndPoints, baseServiceEndPoints);
 
     //events
     //---------------------------------------------------------------------------------------
-    $('#btnGoogleLogin').click(function (e) {
-        var uri = new googleAuthServiceEndPoints(window.IsProductionMode).googleSigninUrl();
-        localStorage['social-login-type'] = "google";
-        //This is the only way I could get google login page to show in same window
+    $('#btnFacebookLogin').click(function (e) {
+        var uri = new facebookAuthServiceEndPoints(window.IsProductionMode).facebookSigninUrl();
+        localStorage['social-login-type'] = "facebook";
+        //This is the only way I could get facebook login page to show in same window
         e.preventDefault();
         window.location.href = uri;
     });
 
     //functions
     //-----------------------------------------------------------------------------------------
-    //Parse the returned url from google.
-    function getGoogleAccessToken() {
+    //Parse the returned url from facebook.
+    function getFacebookAccessToken() {
         //check if the url has a # hash in it.
         if (location.hash) {
-            //split out url contained in location and get just the access token
-
+            //split out url contained in location and get just the access token.
             if (location.hash.split('access_token=')) {
                 var accessToken = location.hash.split('access_token=')[1];
                 if (accessToken != undefined) {
-                    var googleAccessToken = location.hash.split('access_token=')[1].split('&')[0];
+                    var facebookAccessToken = location.hash.split('access_token=')[1].split('&')[0];
                 }
             }
-            //If the access token exists in url chech to see if the user is a registered product service user.
-            if (googleAccessToken) {
-                isUserRegistered(googleAccessToken);
+            //If the access token exists in url check to see if the user is a registered product service user.
+            if (facebookAccessToken) {
+                isUserRegistered(facebookAccessToken);
             }
         }
     }
 
-    //Check if google signin user is already a locally registered product service user.
+    //Check if facebook signin user is already a locally registered product service user.
     //If registered store token and identity a redirect to products by company display.
-    //else register the new google signin user.
-    function isUserRegistered(googleAccessToken) {
+    //else register the new facebook signin user.
+    function isUserRegistered(facebookAccessToken) {
         var uri = new productServiceEndPoints(window.IsProductionMode).userInfoUrl();
         $.ajax({
             url: uri,
             method: 'GET',
             headers: {
                 'content-type': 'application/json',
-                'authorization': 'bearer ' + googleAccessToken
+                'authorization': 'bearer ' + facebookAccessToken
             },
             success: function (response) {
                 if (response.HasRegistered) {
-                    sessionStorage.setItem('accessToken', googleAccessToken)
-                    sessionStorage.setItem('identity', response.Email + ' (Google-OAuth-2)')
+                    sessionStorage.setItem('accessToken', facebookAccessToken)
+                    sessionStorage.setItem('identity', response.Email + ' (Facebook-OAuth-2)')
                     window.location.href = '../htmlviews/ProductsByCompanyDisplay.html';
                 }
                 else {
-                    signupExternalUser(googleAccessToken);
+                    signupExternalUser(facebookAccessToken);
                 }
             }
         });
     }
 
-    //register the google signin user locally for product service access.
-    function signupExternalUser(googleAccessToken) {
+    //register the facebook signin user locally for product service access.
+    function signupExternalUser(facebookAccessToken) {
         var uri = new productServiceEndPoints(window.IsProductionMode).registerExternalUserUrl();
         $.ajax({
             url: uri,
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                'authorization': 'bearer ' + googleAccessToken
+                'authorization': 'bearer ' + facebookAccessToken
             },
             success: function (response) {
-                window.location.href = new googleAuthServiceEndPoints(window.IsProductionMode).googleSigninUrl();
+                window.location.href = new facebookAuthServiceEndPoints(window.IsProductionMode).facebookSigninUrl();
             },
             error: function (jqXHR) {
                 // API returns error in jQuery xml http request object.
@@ -128,8 +129,8 @@ $(document).ready
     }
 
     //function calls
-    //-----------------------------------------------------------------------------------------
+    //----
     var socialLoginType = localStorage['social-login-type'];
-    if (socialLoginType === 'google')
-        getGoogleAccessToken();
+    if (socialLoginType === 'facebook')
+        getFacebookAccessToken();
 }

@@ -6,9 +6,7 @@ $(document).ready()
     window.IsProductionMode = false;
 }
 
-//DONT FORGET TO CHANGE THESE SETTINGS IN STARTUP.AUTH.CS
-
-
+//DONT FORGET TO CHANGE THESE SETTINGS IN STARTUP.AUTH.CS for Google and Facebook OAuth.
 //PRODUCTION
 //ClientId = "962877420729-eau0ke54pafsk8qqinqhs46nnaigqai2.apps.googleusercontent.com",
 //ClientSecret = "TjCIb9FnsRhCYWkzuH67eTM7"

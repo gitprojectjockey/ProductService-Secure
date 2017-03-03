@@ -1,10 +1,13 @@
 Get token by POST to http://localhost:55749/token
-username=ewnordin@comcast.net&password=Wr400f!&grant_type=password
-User-Agent: Fiddler
 content-type: application/json
+--place credentials in post body
+username=val@comcast.net&password=Wr400f!&grant_type=password
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-Then use the token in the header of the get request...
+http://localhost:55749/async/api/products
+Then use the token returned from above call in the header of the get request...
 
-
-Authorization: bearer _RVd91qDksTP10qbSs8VgZASBN7wgIhsyXmj_l0v-Ck8iM1KnuQtkUly3tjdzmDtngXvnzJ254tVK30JIjSdjr_nEKvUV2mhj7BsKF_zJ_ujqD2O64kKUcOJyliXKMp3RZnf9oVwT6l1bAFiYkIrCfPD9kkke9QxUkvEY2DziKuUsWODbL0Q1zALx_v7nkAJ5ox5EqpcIKW9A8Q6tZDZxs8x6_iEZYiI9l7Ept-P9dyP6RtHe8SoHY7nEZyH73cuHXZ4XLXhk9E1dZXO5begyMev2oHy-7CZRi78kxFMU3fVDoujD-hrAh7Dd5b-kM1OSinrV8nR9WzWB_3MvWyfIy6S4P_nnlRYIRbTesFwkVmhlJRgm_kiZq_BPKH2i18em5Z9nlvumxKow5nZkdfBuhPGWvUAXh8RozVlL8LdTXSZhKfHN-ACFH1jcMb52JSTMbu3XeX_ZgEG_nfwxLe8yNY1LqNEahlQePWXmF-zn6M8g5LCHRPW9XZNjEzFbukG
+authorization: bearer 75OEK-A3Kmr9D9i8_piPprEXMpZc1p-RM-MDnbBwNcJPa4ovBNlPc0ManMNcEyZNFrwPys2DOG8XztVoWmE1S4Dlq4-DahbCclVEmuffwdYCvEJzvZjngbhhVWMZTej66aMfoYXC3TzLL7fljL-3DfaBqn5q6GgoyXxsz8X38kmdtsrcke1iIuLT1YoBWmNYQlVkDwU9WCKODcQGBYVZgvX7UivvnNZIdgABA-bK_LEEE7lVwrnoYToCEhU91OOrizk1mscDNttSY5KTOARkLegpvZDM5DYc6fr-HS7w0-gLE2oeTYYPKk89ea2TKKDxnlrbchnUw7PmtLSPFVsfSCUUKsOO_LaD-E6SObcLb-3J2bL5cqZAfaj5xQajGAtybdEyoA9SFtgFmqb5B8La5zMMl6Wjk3fn5Uq6mHG-SF8Rz9EgNdwi1MQRZCsF6YvHzZURcwLiiHTI5yOJu9dgmwy9wK9zE89kxpQE8UtZKXU
+content-type: application/json
