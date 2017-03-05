@@ -31,6 +31,11 @@ $(document).ready()
         window.location.href = '../Registration_Login/Login.html'
     });
 
+    $('.form-control.eric').change(function () {
+        var end = this.value;
+       
+    });
+
     $('#tblProductsByCompany tbody').on('click', 'tr', function (args) {
 
         //grab the clicked row index
@@ -64,7 +69,9 @@ $(document).ready()
                 $('#tblEditDialog .companyName').children().remove();
             }
             //make a deep copy of the selectCompany dropdown from above and inject into tblEditDialog td companyName
-            $('.selectpicker').clone().appendTo($('#tblEditDialog .companyName'))
+            $('.selectpicker').clone().appendTo($('#tblEditDialog .companyName'));
+            $('#tblEditDialog .companyName').children(0).addClass("eric");
+
 
             $('#txtId').val(columns[0].ProductId);
             $('#tblEditDialog .companyName').children(0)[0].selectedIndex = $("#selectCompany")[0].selectedIndex;
@@ -86,6 +93,7 @@ $(document).ready()
                 modal: true,
                 buttons: {
                     "Save": function () {
+                        var dialogSelectedCompany = $('.selectpicker.form-control.eric').find(':selected').val()
                         $(this).dialog("close");
                         //for some reason the opening of dialog removes row hightlight select class
                         //when dialog dismiss find row that has edit button on it an re-add the select class
@@ -93,7 +101,7 @@ $(document).ready()
                             if ($(this).find('td:nth-child(1)').children(1).length > 0)
                                 $(this).addClass('selected');
                         });
-                        saveProduct();
+                        saveProduct(dialogSelectedCompany);
                     },
                     Cancel: function () {
                         $(this).dialog("close");
@@ -167,7 +175,7 @@ $(document).ready()
             error: function (jqXHR) {
                 // API returns error in jQuery xml http request object.
 
-                $('#errorMessage').text(jqXHR.responseText);
+                $('#errorMessage').text(jqXHR.status + ' ' + jqXHR.responseText + ' ' + jqXHR.statusText);
                 $('#validationError').show('fade');
             }
         });
@@ -200,7 +208,7 @@ $(document).ready()
             error: function (jqXHR) {
                 // API returns error in jQuery xml http request object.
 
-                $('#errorMessage').text(jqXHR.responseText);
+                $('#errorMessage').text(jqXHR.status + ' ' + jqXHR.responseText + ' ' + jqXHR.statusText);
                 $('#validationError').show('fade');
             }
         });
@@ -261,7 +269,7 @@ $(document).ready()
                     $('#tokenExpiryModal').modal('show');
                 }
                 else {
-                    $('#errorMessage').text(jqXHR.responseText);
+                    $('#errorMessage').text(jqXHR.status + ' ' + jqXHR.responseText + ' ' + jqXHR.statusText);
                     $('#validationError').show('fade');
                 }
             }
@@ -286,7 +294,7 @@ $(document).ready()
         table.fnDraw();
     }
 
-    function saveProduct() {
+    function saveProduct(clonedSelectedCompanyFromDialog) {
 
         var productToSave = {};
         productToSave.ProductId = $('#txtId').val();
@@ -294,9 +302,9 @@ $(document).ready()
         productToSave.Description = $('#txtDescription').val();
         //remove thousands seperator that was added via css for display
         productToSave.Price = parseFloat($('#txtPrice').val().replace(/,/g, ''));
-        productToSave.CompanyId = $('#selectCompany').find(':selected').val();
+        productToSave.CompanyId = clonedSelectedCompanyFromDialog;
         productToSave.ProductCategoryId = $('#selectCategory').find(':selected').val();
-
+       
         var serializeProduct = JSON.stringify(productToSave);
 
         var uri = new serviceEndPoints(window.IsProductionMode).productUrl();;
@@ -315,7 +323,7 @@ $(document).ready()
                 retrieveJsonProducts(100, 1, currentCompany)
             },
             error: function (jqXHR) {
-                $('#errorMessage').text(jqXHR.responseText);
+                $('#errorMessage').text(jqXHR.status + ' ' + jqXHR.responseText + ' ' + jqXHR.statusText);
                 $('#validationError').show('fade');
             }
         });

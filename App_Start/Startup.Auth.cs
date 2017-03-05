@@ -64,7 +64,7 @@ namespace ProductService
                 //AppId = "1235806606540142",
                 //AppSecret = "0e519bffc62d179814ce18bbbbbc65b3",
 
-                //Development
+                ////Development
                 AppId = "263747314063867",
                 AppSecret = "58c66e84611d678f43a042e6bfe04d5e",
 

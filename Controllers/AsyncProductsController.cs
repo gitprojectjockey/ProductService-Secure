@@ -117,7 +117,7 @@ namespace ProductService.Controllers
         [MyFilters.ModelStateValidator]
         public async Task<IHttpActionResult> Post([FromBody]Product product)
         {
-            var productExists = await _unitOfWork.Products.ProductExistsAsync(product);
+            var productExists = await _unitOfWork.Products.ProductExistsForCreateAsync(product);
 
             if (productExists)
             {
@@ -137,7 +137,7 @@ namespace ProductService.Controllers
         [MyFilters.GenericModelListStateValidator("products", typeof(Product))]
         public async Task<IHttpActionResult> Post([FromBody]IEnumerable<Product> products)
         {
-            var productsExist = await _unitOfWork.Products.ProductRangeExistsAsync(products);
+            var productsExist = await _unitOfWork.Products.ProductRangeExistsForCreateAsync(products);
 
             if (productsExist)
             {
@@ -158,7 +158,7 @@ namespace ProductService.Controllers
         public async Task<IHttpActionResult> Put([FromBody]Product product)
         {
             Product productToUpdate = null;
-            var productExists = await _unitOfWork.Products.ProductExistsAsync(product);
+            var productExists = await _unitOfWork.Products.ProductExistsForUpdateAsync(product);
 
             if (productExists)
             {
@@ -175,7 +175,7 @@ namespace ProductService.Controllers
             }
             else
             {
-                return new MyHelpers.ActionResultFactory.CreateActionResult<Guid>(Request, productToUpdate.ProductId, System.Net.HttpStatusCode.NotFound);
+                return new MyHelpers.ActionResultFactory.CreateActionResult<Guid>(Request, product.ProductId, System.Net.HttpStatusCode.NotFound);
             }
         }
 
@@ -185,7 +185,7 @@ namespace ProductService.Controllers
         [MyFilters.GenericModelListStateValidator("products", typeof(Product))]
         public async Task<IHttpActionResult> Put([FromBody]IEnumerable<Product> products)
         {
-            var allProductsExist = await _unitOfWork.Products.ProductRangeExistsAsync(products);
+            var allProductsExist = await _unitOfWork.Products.ProductRangeExistsForUpdateAsync(products);
 
             if (allProductsExist)
             {
