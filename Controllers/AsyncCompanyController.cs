@@ -1,4 +1,5 @@
 ﻿using EDataLayer.Core.Domain;
+using EDataLayer.Core.Domain.ResultEntities.Concrete;
 using EDataLayer.Core.EUnitOfWork.Async.Abstract;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,22 @@ namespace ProductService.Controllers
             else
             {
                 return new MyHelpers.ActionResultFactory.CreateActionResult<Guid>(Request, company.CompanyId, System.Net.HttpStatusCode.NotFound);
+            }
+        }
+
+        [Route("CompaniesWithProducts")]
+        [HttpGet]
+        [MyFilters.CheckForNullParameter]
+        public async Task<IHttpActionResult> CompaniesWithProductsAsync()
+        {
+            IEnumerable<CompanyWithProductResult> results = await _unitOfWork.Companies.CompaniesWithProducts();
+            if (results != null)
+            {
+                return new MyHelpers.ActionResultFactory.CreateActionResult<IEnumerable<CompanyWithProductResult>>(Request, results, System.Net.HttpStatusCode.OK);
+            }
+            else
+            {
+                return new MyHelpers.ActionResultFactory.CreateActionResult<int>(Request, 0, System.Net.HttpStatusCode.NotFound);
             }
         }
     }

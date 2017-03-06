@@ -18,6 +18,7 @@ namespace ProductService.App_Start
 
     using Ninject.Web.WebApi;
     using System.Web.Http;
+    using EDataLayer.Core.DataContext;
 
     public static class NinjectWebCommon 
     {
