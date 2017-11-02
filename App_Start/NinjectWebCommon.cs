@@ -11,15 +11,6 @@ namespace ProductService.App_Start
     using Ninject;
     using Ninject.Web.Common;
 
-    using EDataLayer.Core.EUnitOfWork.Abstract;
-    using EDataLayer.Core.EUnitOfWork.Concrete;
-    using EDataLayer.Core.EUnitOfWork.Async.Abstract;
-    using EDataLayer.Core.EUnitOfWork.Async.Concrete;
-
-    using Ninject.Web.WebApi;
-    using System.Web.Http;
-    using EDataLayer.Core.DataContext;
-
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -53,7 +44,7 @@ namespace ProductService.App_Start
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-                GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
+
                 RegisterServices(kernel);
                 return kernel;
             }
@@ -70,8 +61,6 @@ namespace ProductService.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InTransientScope();
-            kernel.Bind<IUnitOfWorkAsync>().To<UnitOfWorkAsync>().InTransientScope();
         }        
     }
 }
